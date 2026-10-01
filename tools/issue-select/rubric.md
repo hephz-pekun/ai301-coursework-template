@@ -13,7 +13,7 @@
 | Contribution availability | Issue metadata, linked PRs, and comment history | Pass if the issue appears to be a currently available contribution opportunity with a clear path for a newcomer to begin work. Fail if the issue primarily functions as an ongoing coordination effort, has accumulated many prior contributor attempts or linked PRs, or requires understanding substantial prior work before contributing meaningfully. | required |
 
 ## Verdict
-Accept only if all five required checks grade `pass`. Any required check
+Accept only if all required checks grade `pass`. Any required check
 graded `fail` or `unclear` rejects the issue — unclear is treated as fail,
 because a first issue you cannot verify is not one you should take. There
 are no preferred checks in this rubric: personal fit is handled entirely
