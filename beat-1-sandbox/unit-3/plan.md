@@ -108,3 +108,16 @@ The current diagnosis is based on observed behavior and inspection of
 the existing pattern. Additional investigation may reveal a more
 specific cause.
 
+## Deviation Notes
+
+During implementation, an additional issue was discovered in the
+`street_address` pattern. After updating the phone-number matching
+logic, the test suite exposed a false positive that incorrectly
+redacted non-PII text.
+
+To restore the expected behavior and achieve a passing test suite,
+the `street_address` regex was narrowed so that ordinary prose would
+not be treated as an address.
+
+This change was not anticipated in the original plan but was required
+to satisfy the existing tests after the phone-number fix was completed.

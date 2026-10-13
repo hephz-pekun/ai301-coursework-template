@@ -107,12 +107,12 @@ without XPASS(strict) failures.
 
 **Run history**
 
-19/20
+18/20
 
-My first full evaluation run achieved 19/20 scored items, which
-exceeded the required passing threshold. I reviewed the one
-disagreement (pkg-14) and ran targeted `--only` evaluations to
-understand why my rubric and the gold label differed.
+My first full evaluation run achieved 19/20 scored items and exceeded
+the required passing threshold. I reviewed the disagreement involving
+pkg-14 and ran targeted `--only` evaluations to understand why my
+rubric and the gold label differed.
 
 The disagreement involved how much evidence a plan needs before a
 suspected cause can be discussed. I experimented with small
@@ -120,10 +120,11 @@ adjustments to the Diagnosis grounded, Executable by a stranger, and
 Honest uncertainty checks and re-ran canary packages from the
 wrong-cause category to avoid weakening protections elsewhere.
 
-The targeted runs did not improve agreement without increasing risk to
-other categories, so I kept the rubric in its passing state. My final
-full evaluation remained 19/20 scored items. This score matches the
-agreement line in `eval-run.txt`.
+The revisions did not improve agreement without introducing additional
+disagreements. The final saved evaluation run achieved 18/20 scored
+items, which still met the required passing threshold. This score
+matches the agreement line in `eval-run.txt`.
+
 
 **Package analysis**
 
