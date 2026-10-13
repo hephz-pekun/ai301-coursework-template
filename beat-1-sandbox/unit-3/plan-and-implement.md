@@ -1,79 +1,170 @@
 # Unit 3 — Plan and Build
 
-Path: `beat-1-sandbox/unit-3/plan-and-implement.md`
-
-Record of your plan, the branch you built it on, and the evaluation runs that produced
-`eval-run.txt`. This file is graded at the path above; a copy kept anywhere else in the
-repository is not read.
-
-Complete every labelled field below. Each is graded on its own; content placed under the wrong
-label is not graded.
-
----
-
 ## Posted upstream
 
 **GitHub username**
 
-[Your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comment upstream is identified by this name, and it is
-the only thing that ties it to you. Several students may plan the same
-house issue, so this is what keeps their comments off your score and
-yours off theirs.]
+hephz-pekun
 
 **Plan comment**
 
-[Link to the comment where you posted your plan on the issue. Use the comment's own
-permalink. **Then paste the text of that comment underneath the link** — the pasted text is
-what this field is graded on, so copy across what you actually posted.]
+https://github.com/codepath/pathreview-ai301-fa26-howard/issues/53#issuecomment-6133196884
+
+Plan for issue #53
+
+Diagnosis:
+The behavior documented in my reproduction comment shows that (555) 123-4567 is not detected or redacted, while 555-123-4567 is handled correctly.
+
+Scope:
+Update US phone-number matching so parenthesized phone numbers are detected consistently with existing supported formats. This work is limited to the phone-matching logic and related tests.
+
+Files/areas:
+- safety/pii_scrubber.py
+- tests/unit/test_pii_scrubber.py
+
+Branch: 
+fix/53-parenthesized-phone
+
+Validation:
+I will rerun the reproduction script from my repro report, verify that the parenthesized format is both detected and redacted after the change, and confirm that the issue #53 xfailed tests pass after the associated xfail markers are removed.
 
 ---
+
 
 ## Your branch
 
 **Branch**
 
-[The name of the branch you built the change on, exactly as it appears in your fork. The
-naming shape is a type prefix, then the issue number, then a short description. **The issue
-number in the branch name must be the number of the issue you claimed** — a name carrying
-any other number does not satisfy this field.]
+fix/53-parenthesized-phone
+
+https://github.com/hephz-pekun/pathreview-ai301-fa26-howard/tree/fix/53-parenthesized-phone
 
 **Evidence**
 
-[Your Unit 2 reproduction steps re-run against the built change: the before, then the
-after. Paste both, including the commands you ran and their output.]
+### Before
 
-## Eval iterations
+Command:
 
-Answer all four sections. Quote source text directly; paraphrase does not satisfy these
-fields.
+```powershell
+python repro.py
+```
 
-**Run history**
+Output:
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+```text
+Call me at (555) 123-4567 or [REDACTED]
+2026-10-05 16:21:49 [info     ] pii_detected count=0 types=0
+[]
+```
 
-**Package analysis**
+Command:
 
-[Pick one scored package (`pkg-01` through `pkg-20` — the four `calib-` packages are never
-scored). Name it by id, say what your rubric decided and what the gold label said, and
-explain why your rubric read it that way.]
+```powershell
+pytest tests/unit/test_pii_scrubber.py
+```
 
-**Check rationale**
+Output:
 
-[Quote one check from the `rubric.md` you uploaded to `tools/plan-check/`, exactly as it reads now.
-Then say why it reads that way — what you revised to get there, or what you rejected in
-favour of it.]
+```text
+20 passed, 5 xfailed
+```
 
-**Trade-offs**
+### After
 
-[Every check gives something up. Any one of these is a complete answer: a package whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+Command:
+
+```powershell
+python repro.py
+```
+
+Output:
+
+```text
+Call me at [REDACTED] or [REDACTED]
+2026-10-12 18:23:22 [info     ] pii_detected count=1 types=1
+[{'type': 'phone_us', 'value': '(555) 123-4567', 'start': 11, 'end': 25}]
+```
+
+Command:
+
+```powershell
+pytest tests/unit/test_pii_scrubber.py
+```
+
+Output:
+
+```text
+25 passed in 0.34s
+```
+
+The parenthesized phone number is now detected and redacted correctly.
+The issue #53 xfailed tests were removed, and the test suite passes
+without XPASS(strict) failures.
 
 ---
 
-Related paths: `plan.md` and `eval-run.txt` in this directory; your skill's files in
-`tools/plan-check/`.
+## Eval iterations
+
+**Run history**
+
+19/20
+
+My first full evaluation run achieved 19/20 scored items, which
+exceeded the required passing threshold. I reviewed the one
+disagreement (pkg-14) and ran targeted `--only` evaluations to
+understand why my rubric and the gold label differed.
+
+The disagreement involved how much evidence a plan needs before a
+suspected cause can be discussed. I experimented with small
+adjustments to the Diagnosis grounded, Executable by a stranger, and
+Honest uncertainty checks and re-ran canary packages from the
+wrong-cause category to avoid weakening protections elsewhere.
+
+The targeted runs did not improve agreement without increasing risk to
+other categories, so I kept the rubric in its passing state. My final
+full evaluation remained 19/20 scored items. This score matches the
+agreement line in `eval-run.txt`.
+
+**Package analysis**
+
+I analyzed pkg-14.
+
+My rubric rejected the package, while the gold label accepted it.
+
+The package failed the Diagnosis grounded and Honest uncertainty checks
+under my rubric. My interpretation was that the plan stated a
+suspected mechanism more confidently than the available reproduction
+evidence supported.
+
+The gold label accepted the package, suggesting that the benchmark was
+comfortable with a stronger working hypothesis as part of a valid
+plan. This disagreement showed that my rubric was stricter than the
+benchmark about how much evidence is required before a suspected cause
+can appear in a plan.
+
+**Check rationale**
+
+Current rubric wording:
+
+"Pass if the diagnosis follows from behavior shown in the repro evidence or is clearly presented as a working hypothesis to investigate. The diagnosis does not need to prove the root cause before implementation begins. Fail if the diagnosis contradicts the reproduced behavior or presents unsupported assumptions as confirmed facts."
+
+I chose this wording because planning often begins before the exact
+root cause has been proven. The check allows investigation-driven
+hypotheses while still requiring the diagnosis to remain tied to
+observed reproduction evidence. This helps distinguish
+evidence-based planning from unsupported speculation.
+
+**Trade-offs**
+
+The Diagnosis grounded check can reject plans that contain plausible
+explanations when those explanations are presented as established
+facts rather than working hypotheses. I tested revisions against
+pkg-14 and wrong-cause canary packages, but they did not improve
+overall agreement without risking regressions elsewhere. I therefore
+kept the stricter version of the check and accepted the single
+disagreement.
+
+---
+
+Related paths: `plan.md` and `eval-run.txt` in this directory; your
+skill's files in `tools/plan-check/`.
