@@ -46,12 +46,7 @@ PR matched the planned work, the package passed every required check.
 
 Quoted from my rubric:
 
-"Pass if the PR provides observable evidence that the planned change was
-tested and that the planned validation steps were performed. Evidence
-may consist of before/after behavior, reproduced results, test output,
-or explicitly reported test execution. Fail when testing is absent,
-unrelated to the planned behavior, or cannot reasonably support the
-claimed result."
+"Pass if the PR provides observable evidence for the behavior being changed and describes how validation was performed. Evidence may include before/after behavior, reproduced results, automated test output, or explicitly reported execution of planned tests. Fail only when testing is absent, unrelated to the planned behavior, or provides no reasonable basis for the claimed result."
 
 I revised this check after examining pkg-19. My original version
 required visible test output, which incorrectly rejected a package the
