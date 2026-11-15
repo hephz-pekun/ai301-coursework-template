@@ -55,6 +55,8 @@ one in the week it belongs to.
 
 **Unit 9: Built and evaluated an issue-scout workflow for selecting an open-source contribution**
 
+The highest-ranked issue from the initial scan became unavailable before implementation began, requiring a second scan and issue selection. This provided an opportunity to evaluate how well the scout adapted to changing contribution opportunities.
+
 I configured the issue-scout tool using a profile focused on Python, testing, and bug-fix work. After running a scan, I reviewed the five highest-ranked issues and compared the recommendations against my own goals for a first contribution. The scan identified several useful candidates, including agentswarm-data-tasks#234, but it also exposed weaknesses in the ranking strategy such as duplicate query coverage and a tendency to favor newly created issues. I recorded those findings in scan-notes.md and used the results to choose a contribution target.
 
 **Unit 10: [one line on the tool work]**
@@ -73,9 +75,9 @@ drafted, what you did with the draft.]
 
 ## Why I Chose This Issue
 
-I used my issue-scout tool to search for beginner-friendly Python issues related to testing, data processing, and bug fixing. My initial top-ranked selections were claimed before I could begin work on them, so I reran the scout and evaluated a new set of candidates. The scout accepted sf-exit#13 and identified it as a strong match because the scope was limited to a single audit finding and accompanying test coverage in an active Python project.
+I initially selected agentswarm-data-tasks#234 after it was identified as the strongest match by my issue-scout workflow. After claiming the issue, it became unavailable before I could begin implementation work. I returned to the scout's ranked results, reran the scan, and evaluated a new set of candidates. The scout subsequently identified sf-exit#13 as a strong match because it involved Python development, testing, and a clearly defined scope.
 
-I chose this issue because it involves understanding an existing codebase, extending functionality, and validating the change with automated tests. The issue focuses on a real Salesforce data-quality problem: identifying unconverted Leads that already exist as Contacts. It fits my interests in backend logic and testing while remaining small enough for a first open-source contribution.
+I chose sf-exit#13 because it addressed a real-world Salesforce data-quality problem and included an existing implementation pattern that could be extended. The issue provided an opportunity to practice reproducing missing functionality, writing failing tests, implementing a targeted change, and validating the behavior with automated tests.
 
 **Claim comment:** https://github.com/akhsterminator/sf-exit/issues/13#issuecomment-6887436774
 
