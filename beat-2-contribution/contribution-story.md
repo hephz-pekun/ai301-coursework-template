@@ -59,18 +59,6 @@ The highest-ranked issue from the initial scan became unavailable before impleme
 
 I configured the issue-scout tool using a profile focused on Python, testing, and bug-fix work. After running a scan, I reviewed the five highest-ranked issues and compared the recommendations against my own goals for a first contribution. The scan identified several useful candidates, including agentswarm-data-tasks#234, but it also exposed weaknesses in the ranking strategy such as duplicate query coverage and a tendency to favor newly created issues. I recorded those findings in scan-notes.md and used the results to choose a contribution target.
 
-**Unit 10: [one line on the tool work]**
-
-**Unit 11: [one line on the tool work]**
-
-[2-4 sentences: the ship-gate and your gate manifest. What it produced
-on your real branch, what fought you, what changed because of it.]
-
-**Unit 12: [one line on the tool work]**
-
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
-
 ---
 
 ## Why I Chose This Issue
@@ -127,7 +115,7 @@ Windows 11, Python 3.14, and a local clone of the sf-exit repository. Dependenci
 
 pip install -e ".[dev]"
 
-The test suite uses pytest and a fake Salesforce organization defined in tests/fake_org.py.
+which installed pytest, click, rich, duckdb, and the local sf-exit package. The only setup issue encountered was a missing dependency error (`ModuleNotFoundError: No module named 'click'`) when running the test suite before installing project dependencies. After installing the development dependencies from pyproject.toml, the test suite ran successfully.
 
 **Steps to Reproduce**
 
@@ -166,7 +154,7 @@ AssertionError: assert 'lead-contact-overlap' in ids
 
 **Analysis**
 
-The existing audit logic already identifies duplicate email addresses through the duplicate-emails finding, but it does not separately identify the Salesforce-specific data quality issue described in the issue: an unconverted Lead whose email address already exists on a Contact. During code review, I found that email addresses were already being normalized to lowercase and collected for duplicate detection, making it possible to extend the existing audit workflow with a dedicated Lead-to-Contact finding.
+The issue originated in the email aggregation logic inside `analyse_object()` and the finding-generation logic inside `findings_for()` in `src/sf_exit/audit.py`. The existing implementation already normalized email addresses to lowercase and tracked duplicate email addresses through the `duplicate-emails` finding. However, it did not separately track Contact email addresses and unconverted Lead email addresses, making it impossible for `findings_for()` to generate a dedicated Lead-to-Contact overlap finding. As a result, the Salesforce-specific data-quality issue described in the GitHub issue was not reported even when matching records existed.
 
 **Proposed Solution**
 
@@ -231,9 +219,11 @@ All checks passed!
 
 **2026-11-14**
 
-I selected sf-exit issue #13 after earlier issue-scout recommendations became unavailable. I reviewed the existing duplicate-emails finding and reproduced the missing behavior by extending the fake Salesforce organization with an unconverted Lead whose email matched an existing Contact using different casing. A new test expecting a lead-contact-overlap finding failed, confirming the feature was not implemented.
+Extended the fake Salesforce org with a Lead fixture whose email matched an existing Contact using different casing. Added a test expecting a lead-contact-overlap finding and confirmed the test failed, reproducing the issue. 
 
-I updated audit.py to track Contact and unconverted Lead email addresses separately and added a new lead-contact-overlap finding based on case-insensitive matches. I then extended the test suite with assertions validating the finding count and matched email address. The final implementation passed both pytest and ruff check.
+**2026-11-14** 
+
+Updated analyse_object() and findings_for() in audit.py to track Contact and unconverted Lead email addresses separately. Added the lead-contact-overlap finding, verified the new assertions passed, and ran pytest and ruff successfully.
 
 **Toolkit**
 
@@ -249,6 +239,16 @@ I updated audit.py to track Contact and unconverted Lead email addresses separat
 **PR Link:** (https://github.com/akhsterminator/sf-exit/pull/17#issue-6399423119)
 
 **PR Description:** 
+Closes #13
+
+## Why?
+
+Salesforce organizations frequently contain both Leads and Contacts representing the same person. The audit already reports duplicate email addresses but does not explicitly identify unconverted Leads that match existing Contacts. This change adds a dedicated audit finding for that scenario.
+
+## AI Assistance Disclosure
+
+AI assistance was used for code review, implementation planning, and documentation. All code, testing, and validation steps were reviewed and verified before submission.
+
 ## What does this change?
 
 Adds a new audit finding that identifies unconverted Leads whose email addresses already exist on Contacts.
@@ -267,6 +267,19 @@ Changes include:
 - [x] Added or updated tests (extend `tests/fake_org.py` if needed)
 - [ ] Updated `CHANGELOG.md` / docs if user-facing
 
+## Evidence
+
+Before:
+
+```text
+AssertionError: assert 'lead-contact-overlap' in ids
+```
+After:
+```
+pytest tests/test_tools.py -q
+.....
+5 passed in 2.49s
+```
 Commands run:
 
 ```bash
@@ -295,6 +308,8 @@ ruff check .
 **Technical Skills Gained**
 
 I learned how to extend an existing audit pipeline without duplicating logic, how to add meaningful test fixtures for a simulated environment, and how to use pytest to drive implementation through reproduction and validation. I also gained experience working with Salesforce-style data structures and case-insensitive matching logic.
+
+The most useful lesson came from the transition between agentswarm-data-tasks#234 and sf-exit#13. My initial issue selection became unavailable before implementation began, forcing me to rerun the issue-scout workflow and evaluate new candidates. During the sf-exit contribution, I learned how audit findings are generated from aggregated export data and how test fixtures can be extended to reproduce missing behavior before implementing a change.
 
 **Challenges Overcome**
 
