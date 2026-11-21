@@ -53,51 +53,30 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-## Unit 5: issue-select
-
-I built the **issue-select** skill to evaluate GitHub issues and identify
-strong candidates for contribution work. The strategy focused on
-reproducibility, bounded scope, clear ownership, and evidence that an
-issue could be resolved within a single pull request. Early versions
-were too permissive and occasionally surfaced issues with unclear
-reproduction paths or coordination risks, so I tightened the selection
-criteria to favor actionable issues with concrete validation steps.
-
-## Unit 6: plan-check
-
-I built the **plan-check** skill to evaluate whether an implementation
-plan was grounded in reproduced behavior and executable by another
-contributor. The main challenge was calibrating how much evidence a
-diagnosis needed before it could appear in a plan. I refined the
-diagnosis-related checks after reviewing evaluation disagreements and
-validated the changes against canary packages. The final rubric
-achieved full agreement with the evaluation set.
-
-## Unit 7: pr-precheck
-
-I built the **pr-precheck** skill to review pull requests against the
-original plan, implementation diff, validation evidence, and repository
-standards. Running it against my own branch exposed issues in the PR
-description, testing checklist, disclosure requirements, and reviewer
-communication that I had overlooked while focusing on the code change.
-Iteratively addressing those findings improved the quality of the PR,
-and the final review produced an **accept** verdict on my branch.
-
-## Unit 8: repro-check
-
-I built the **repro-check** skill and supporting playbook to evaluate
-issue reports for reproducibility and generate structured reproduction
-steps. The skill reads issue descriptions, expected behavior, observed
-behavior, and supporting evidence, then produces a reproducible
-workflow and validation checklist. I used the reproduced behaviors and
-drafted validation steps to guide later planning and implementation
-work, which made issue investigation and verification more consistent.
-
-**Unit 9: Built and evaluated an issue-scout workflow for selecting an open-source contribution**
+## Unit 9: issue-scout
+I built the **issue-scout** skill by expanding the original issue-select workflow to evaluate GitHub issues and identify strong candidates for contribution work. The strategy focused on reproducibility, bounded scope, clear ownership, and evidence that an issue could be resolved within a single pull request. Early versions were too permissive and occasionally surfaced issues with unclear reproduction paths or coordination risks, so I tightened the selection criteria to favor actionable issues with concrete validation steps.
 
 The highest-ranked issue from the initial scan became unavailable before implementation began, requiring a second scan and issue selection. This provided an opportunity to evaluate how well the scout adapted to changing contribution opportunities.
 
 I configured the issue-scout tool using a profile focused on Python, testing, and bug-fix work. After running a scan, I reviewed the five highest-ranked issues and compared the recommendations against my own goals for a first contribution. The scan identified several useful candidates, including agentswarm-data-tasks#234, but it also exposed weaknesses in the ranking strategy such as duplicate query coverage and a tendency to favor newly created issues. I recorded those findings in scan-notes.md and used the results to choose a contribution target.
+
+## Unit 10: plan-check
+
+I built the **plan-check** skill to evaluate whether an implementation plan was grounded in reproduced behavior and executable by another contributor. The main challenge was calibrating how much evidence a
+diagnosis needed before it could appear in a plan. I refined the diagnosis-related checks after reviewing evaluation disagreements and validated the changes against canary packages. The final rubric
+achieved full agreement with the evaluation set.
+
+## Unit 11: pr-precheck
+
+I built the **pr-precheck** skill to review pull requests against the original plan, implementation diff, validation evidence, and repository standards. Running it against my own branch exposed issues in the PR
+description, testing checklist, disclosure requirements, and reviewer communication that I had overlooked while focusing on the code change. Iteratively addressing those findings improved the quality of the PR,
+and the final review produced an **accept** verdict on my branch.
+
+## Unit 12: repro-check
+
+I built the **repro-check** skill and supporting playbook to evaluate issue reports for reproducibility and generate structured reproduction steps. Early versions focused mainly on creating reproduction instructions, but I found that the instructions were often disconnected from later validation work and had to be rewritten during planning and testing.
+
+To address that problem, I expanded the tool into a playbook that connected issue evidence, expected behavior, reproduction steps, and validation requirements. The resulting workflow could be reused throughout planning, implementation, and pull-request review. Using the workflow for issue #53 produced the same before-and-after evidence that later appeared in `test_evidence.md`, the implementation plan, and the final pull request.
 
 ---
 
@@ -285,7 +264,7 @@ Updated analyse_object() and findings_for() in audit.py to track Contact and unc
 
 ## Pull Request
 
-**PR Link:** (https://github.com/akhsterminator/sf-exit/issues/13#issuecomment-7054825982)
+**PR Link:** (https://github.com/akhsterminator/sf-exit/pull/17#issue-6399423119)
 
 **PR Description:** 
 Closes #13

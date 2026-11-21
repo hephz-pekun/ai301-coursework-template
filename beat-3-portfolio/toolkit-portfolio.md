@@ -60,11 +60,11 @@ The final rubric evaluated seven checks: Maintainer Alive, Repository In Use, Ne
 
 ### Plan-Check
 
-**What it is, and the judgment hole I wrote:** Plan-Check evaluates implementation plans and determines whether a proposed change is grounded in reproduced behavior, supported by evidence, scoped correctly, and executable by another contributor. The judgment hole is deciding whether a plan is ready to implement.
+**What it is, and the judgment hole I wrote:** Plan-Check evaluates implementation plans and determines whether a proposed change is grounded in reproduced behavior, supported by evidence, scoped correctly, and executable by another contributor. The judgment hole is deciding whether a plan is ready to implement and whether its proposed work is adequately supported by observed evidence.
 
-**How it evolved, dated:** October 2026: early versions of the rubric required very strong diagnostic certainty and often rejected plans that made reasonable technical observations. Evaluation disagreements showed that the rubric was penalizing plans for discussing likely causes. I revised the diagnosis-related checks and repeatedly validated the revisions with evaluation canaries. The friction was finding the balance between evidence requirements and practical software planning.
+**How it evolved, dated:** October 2026: early versions of the rubric required strong diagnostic certainty and frequently rejected plans that discussed likely causes without direct proof. Evaluation disagreements revealed that the rubric was penalizing reasonable technical investigation. I revised the diagnosis-related checks and repeatedly validated those changes against evaluation canaries. The friction was balancing evidence requirements with practical engineering planning.
 
-**Evidence:** During evaluation tuning, disagreement analysis revealed that a diagnosis-related check was overly restrictive. After revising that check and validating it with canaries, the final evaluation achieved complete agreement with the evaluation set.
+**Evidence:** During evaluation tuning, a diagnosis-related check incorrectly rejected packages that the evaluation set accepted. After revising the check and validating the change with canary packages, the final evaluation achieved complete agreement with the grading set. The change allowed plans to distinguish between observed facts and likely causes while still requiring evidence for implementation decisions.
 
 ---
 
@@ -103,11 +103,30 @@ after I corrected missing disclosure details, testing evidence, reviewer notes, 
 
 ### Repro-Check
 
-**What it is, and the judgment hole I wrote:** Repro-Check evaluates issue reports and generates structured reproduction workflows. It connects issue descriptions, expected behavior, observed behavior, validation steps, and evidence requirements. The judgment hole is deciding whether an issue is reproducible and whether the expected outcome can be validated.
+**What it is, and the judgment hole I wrote:** Repro-Check evaluates issue reports and generates structured reproduction workflows. It reads issue descriptions, expected behavior, observed behavior, reproduction evidence, and validation requirements. The judgment hole is deciding whether an issue contains enough evidence to support a reproducible workflow. A report passes when it describes an observable behavior, provides enough information to reproduce it, and defines a verifiable expected outcome; issues that cannot be reproduced from the available evidence are flagged for additional investigation.
 
-**How it evolved, dated:** November 2026: the first version primarily generated reproduction instructions. As I used it in later units, I expanded it into a playbook that connected reproduction evidence directly to planning and implementation validation. The friction was ensuring that issue reports could be converted into workflows another contributor could consistently execute.
+**How it evolved, dated:** November 2026: the first version primarily generated reproduction instructions. As I reused it in later units, I expanded it into a playbook that connected reproduction evidence directly to planning and pull-request validation. The friction was ensuring that issue reports consistently translated into workflows another contributor could execute. To address that, I tied reproduction outputs to validation requirements so the same evidence could be reused across planning, implementation, and review.
 
-**Evidence:** Reproduction workflows generated through the tool were used to create before-and-after evidence for multiple assignments. The resulting reproduction plans were reused during issue investigation, implementation planning, testing, and pull-request validation.
+**Evidence:** The reproduction workflow used for issue #53 produced the following before-and-after validation evidence:
+
+Before:
+
+```text
+Call me at (555) 123-4567 or [REDACTED]
+[]
+```
+
+After:
+
+```text
+Call me at [REDACTED] or [REDACTED]
+
+[{'type': 'phone_us', 'value': '(555) 123-4567', 'start': 11, 'end': 25}]
+```
+
+The same reproduction workflow and expected outcome were reused in `test_evidence.md`, the implementation plan, and the final pull request.
+
+
 
 ## Inventory
 
